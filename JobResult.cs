@@ -11,8 +11,8 @@ namespace MiniCloud
             this.Job = job;
         }
 
-        public int ExitCode { get; internal set; }
-        public Stream Logging { get; internal set; }
-        public Stream Output { get; internal set; }
+        public int ExitCode { get; set; }
+        public Stream Logging { get; set; }
+        public Stream Output { get; set; }
     }
 }

@@ -62,7 +62,8 @@ namespace MiniCloud
         {
             lock (running)
             {
-                return Capacity - running.Count;
+                return Math.Max(0, Capacity - running.Count);
+                
             }
         }
     }
