@@ -40,8 +40,7 @@ namespace MiniCloud
         protected override Task StoreResultAsync(Job job, JobResult result)
         {
             running.Remove(job);
-            Console.Error.WriteLine($"{job} exited with code {result.ExitCode}");
-            Console.WriteLine($"output is {result.Output.Length} bytes");
+            Console.WriteLine($"{job} exited with code {result.ExitCode} in {result.Elasped.TotalMilliseconds:N0}MS, output is {result.Output.Length} bytes");
             Console.Error.WriteLine(result.Logging.ReadToEnd());
             return Task.FromResult(true);
         }
@@ -49,6 +48,7 @@ namespace MiniCloud
         protected override List<Job> WaitForJobs()
         {
             int spareCapacity = SpareCapacity();
+            Console.Error.WriteLine($"host has spare capacity of {spareCapacity}");
             if (spareCapacity <= 0)
                 return new List<Job>();
 
@@ -64,6 +64,8 @@ namespace MiniCloud
                     break;
             }
 
+            Console.Error.WriteLine($"Returning {result.Count} jobs");
+            running.AddRange(result);
             return result;
         }
 
@@ -72,6 +74,17 @@ namespace MiniCloud
             lock (running)
             {
                 return Math.Max(0, Capacity - running.Count);                
+            }
+        }
+    }
+
+    static class CollectionExtensions
+    {
+        public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> range)
+        {
+            foreach (var item in range)
+            {
+                collection.Add(item);
             }
         }
     }

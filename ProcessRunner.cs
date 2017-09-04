@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Collections.Specialized;
 using System.Collections.Generic;
+using System;
 
 namespace MiniCloud
 {
@@ -27,6 +28,8 @@ namespace MiniCloud
                 UseShellExecute = false,
             };
             start.EnvironmentVariables.AddRange(job.Environment);
+
+            Console.Error.WriteLine($"{job} starting");
 
             var proc = Process.Start(start);
 
