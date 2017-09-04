@@ -43,8 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CollectionExtensions.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Host.cs" />
     <Compile Include="InMemoryHost.cs" />
+    <Compile Include="IoExtensions.cs" />
     <Compile Include="Job.cs" />
     <Compile Include="JobResult.cs" />
     <Compile Include="ProcessRunner.cs" />
