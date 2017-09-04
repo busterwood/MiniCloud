@@ -2,9 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
+using System.IO;
+using System.Text;
 
 namespace MiniCloud
 {
+    /// <summary>
+    /// Testing host that does not persist the jobs
+    /// </summary>
     class InMemoryHost : Host
     {
         readonly HashSet<Job> running = new HashSet<Job>();
@@ -28,12 +33,16 @@ namespace MiniCloud
         protected override Task StoreExceptionAsync(Job job, Exception ex)
         {
             running.Remove(job);
+            Console.Error.WriteLine($"{job} FAILED with exception {ex}");
             return Task.FromResult(true);
         }
 
         protected override Task StoreResultAsync(Job job, JobResult result)
         {
             running.Remove(job);
+            Console.Error.WriteLine($"{job} exited with code {result.ExitCode}");
+            Console.WriteLine($"output is {result.Output.Length} bytes");
+            Console.Error.WriteLine(result.Logging.ReadToEnd());
             return Task.FromResult(true);
         }
 
@@ -62,9 +71,17 @@ namespace MiniCloud
         {
             lock (running)
             {
-                return Math.Max(0, Capacity - running.Count);
-                
+                return Math.Max(0, Capacity - running.Count);                
             }
+        }
+    }
+
+    static class IoExtensions
+    {
+        public static string ReadToEnd(this Stream stream)
+        {
+            stream.Seek(0, SeekOrigin.Begin);
+            return new StreamReader(stream, Encoding.UTF8, false, 4096, true).ReadToEnd();
         }
     }
 }

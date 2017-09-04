@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace MiniCloud
 {
+    /// <summary>
+    /// A host that can run a number of jobs in parallel
+    /// </summary>
     abstract class Host
     {
         readonly string[] args;

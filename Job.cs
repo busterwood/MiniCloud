@@ -8,7 +8,9 @@ namespace MiniCloud
         public string Arguments { get; set; }
         public string FileName { get; set; }
         public string WorkingDirectory { get; set; }
-        public Stream Input { get; set; }
-        public IReadOnlyDictionary<string, string> Environment { get; set; }
+        public Stream Input { get; set; } 
+        public IReadOnlyDictionary<string, string> Environment { get; set; } = new Dictionary<string, string>();
+
+        public override string ToString() => $"Job '{FileName} {Arguments}' in '{WorkingDirectory}'";
     }
 }

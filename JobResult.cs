@@ -8,7 +8,9 @@ namespace MiniCloud
 
         public JobResult(Job job)
         {
-            this.Job = job;
+            Job = job;
+            Logging = new MemoryStream();
+            Output = new MemoryStream();
         }
 
         public int ExitCode { get; set; }

@@ -5,10 +5,15 @@ using System.Collections.Generic;
 
 namespace MiniCloud
 {
+    /// <summary>
+    /// Runs a job in a separate process
+    /// </summary>
     class ProcessRunner : Runner
     {
         public override async Task<JobResult> RunAsync(Job job)
         {
+            await Task.Yield(); // ensure not running synchronously
+
             var result = new JobResult(job);
 
             ProcessStartInfo start = new ProcessStartInfo
