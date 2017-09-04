@@ -45,15 +45,15 @@
   <ItemGroup>
     <Compile Include="CollectionExtensions.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Host.cs" />
-    <Compile Include="InMemoryHost.cs" />
+    <Compile Include="Hosts\Host.cs" />
+    <Compile Include="Hosts\InMemoryHost.cs" />
     <Compile Include="IoExtensions.cs" />
     <Compile Include="Job.cs" />
     <Compile Include="JobResult.cs" />
-    <Compile Include="ProcessRunner.cs" />
+    <Compile Include="Runners\ProcessRunner.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runner.cs" />
+    <Compile Include="Runners\Runner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
