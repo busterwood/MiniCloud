@@ -42,9 +42,7 @@ namespace MiniCloud
         {
             try
             {
-                job.Started = DateTimeOffset.Now;
                 var result = await runner.RunAsync(job);
-                result.Finished = DateTimeOffset.Now;
                 await StoreResultAsync(job, result);
             }
             catch (Exception ex)

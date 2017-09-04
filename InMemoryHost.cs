@@ -32,6 +32,7 @@ namespace MiniCloud
 
         protected override Task StoreExceptionAsync(Job job, Exception ex)
         {
+            //result.Finished = DateTimeOffset.Now;
             running.Remove(job);
             Console.Error.WriteLine($"{job} FAILED with exception {ex}");
             return Task.FromResult(true);
@@ -39,6 +40,7 @@ namespace MiniCloud
 
         protected override Task StoreResultAsync(Job job, JobResult result)
         {
+            result.Finished = DateTimeOffset.Now;
             running.Remove(job);
             Console.WriteLine($"{job} exited with code {result.ExitCode} in {result.Elasped.TotalMilliseconds:N0}MS, output is {result.Output.Length} bytes");
             Console.Error.WriteLine(result.Logging.ReadToEnd());
@@ -53,13 +55,17 @@ namespace MiniCloud
                 return new List<Job>();
 
             List<Job> result = new List<Job>();
-            result.Add(NewJobs.Take()); // likely to block here
+            Job job = NewJobs.Take(); // likely to block here
+            job.Started = DateTimeOffset.Now;
+            result.Add(job);
 
             while (result.Count < spareCapacity)
             {
-                Job job;
                 if (NewJobs.TryTake(out job))
+                {
+                    job.Started = DateTimeOffset.Now;
                     result.Add(job);
+                }
                 else
                     break;
             }
