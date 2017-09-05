@@ -12,7 +12,6 @@ namespace MiniCloud
         public Stream Input { get; set; } 
         public IReadOnlyDictionary<string, string> Environment { get; set; } = new Dictionary<string, string>();
         public DateTimeOffset Started { get; set; }
-
         public override string ToString() => $"Job '{FileName} {Arguments}' in '{WorkingDirectory}'";
     }
 }
