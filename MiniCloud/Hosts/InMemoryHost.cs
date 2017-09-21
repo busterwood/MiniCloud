@@ -8,11 +8,12 @@ namespace MiniCloud
     /// <summary>
     /// Testing host that does not persist the jobs
     /// </summary>
-    class InMemoryHost : Host
+    class InMemoryHost : LoggingHost
     {
         readonly HashSet<Job> running = new HashSet<Job>();
 
         public BlockingCollection<Job> NewJobs { get; } = new BlockingCollection<Job>();
+        public BlockingCollection<JobResult> Finished { get; } = new BlockingCollection<JobResult>();
 
         public int Capacity { get; set; }
 
@@ -28,21 +29,19 @@ namespace MiniCloud
             }
         }
 
-        protected override Task StoreExceptionAsync(Job job, Exception ex)
+        protected override async Task StoreExceptionAsync(Job job, Exception ex)
         {
-            //result.Finished = DateTimeOffset.Now;
+            await base.StoreExceptionAsync(job, ex);
             running.Remove(job);
-            Console.Error.WriteLine($"{job} FAILED with exception {ex}");
-            return Task.FromResult(true);
         }
 
-        protected override Task StoreResultAsync(Job job, JobResult result)
+        protected override async Task StoreResultAsync(Job job, JobResult result)
         {
+            await base.StoreResultAsync(job, result);
             result.Finished = DateTimeOffset.Now;
             running.Remove(job);
-            Console.WriteLine($"{job} exited with code {result.ExitCode} in {result.Elasped.TotalMilliseconds:N0}MS, output is {result.Output.Length} bytes");
-            Console.Error.WriteLine(result.Logging.ReadToEnd());
-            return Task.FromResult(true);
+            Finished.Add(result);
+            Console.WriteLine($"{job} exited with code {result.ExitCode}, output is {result.Output.Length} bytes");
         }
 
         protected override List<Job> WaitForJobs()

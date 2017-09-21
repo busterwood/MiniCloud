@@ -6,6 +6,7 @@ namespace MiniCloud
 {
     internal class Job
     {
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string Arguments { get; set; }
         public string FileName { get; set; }
         public string WorkingDirectory { get; set; }

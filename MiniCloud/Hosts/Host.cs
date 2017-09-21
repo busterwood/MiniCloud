@@ -11,15 +11,13 @@ namespace MiniCloud
     abstract class Host
     {
         readonly string[] args;
-        readonly Runner runner;
 
-        public Host(string[] args, Runner runner)
+        public Host(string[] args)
         {
             this.args = args;
-            this.runner = runner;
         }
 
-        public void RunHost()
+        public virtual void RunHost()
         {
             var jobComplete = new AutoResetEvent(false);
             for (;;)
@@ -38,11 +36,11 @@ namespace MiniCloud
 
         protected abstract List<Job> WaitForJobs();
 
-        async Task RunAsync(Job job)
+        protected virtual async Task RunAsync(Job job)
         {
             try
             {
-                var result = await runner.RunAsync(job);
+                var result = await RunAsyncCore(job);
                 await StoreResultAsync(job, result);
             }
             catch (Exception ex)
@@ -51,9 +49,9 @@ namespace MiniCloud
             }
         }
 
+        protected abstract Task<JobResult> RunAsyncCore(Job job);
         protected abstract Task StoreResultAsync(Job job, JobResult result);
         protected abstract Task StoreExceptionAsync(Job job, Exception ex);
         protected abstract bool JobCapacityReached();
     }
-    
 }
